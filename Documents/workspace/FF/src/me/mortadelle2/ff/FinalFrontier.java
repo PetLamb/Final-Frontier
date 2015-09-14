@@ -64,9 +64,9 @@ public class FinalFrontier extends JavaPlugin{
 		if (!ffKits.contains("Kits.archer")){
 			ffKits.set("Kits.archer.items", "300-1,301-1");
 			ffKits.set("Kits.archer.enchants", "34:2,34:1");
-			ffKits.set("Kits.archer.names", "Final Frontier Archer Leggings,Final Frontier Archer Boots");
+			ffKits.set("Kits.archer.names", "Final Frontier Archer Leggings,default");
 			
-			ffKits.set("Kits.archer.perm" , "ffKits.mage");
+			ffKits.set("Kits.archer.perm" , "ffKits.archer");
 			try {
 				ffKits.save(kits);
 			} catch (IOException e) {
