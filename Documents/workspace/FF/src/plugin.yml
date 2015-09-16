@@ -1,0 +1,15 @@
+main: me.mortadelle2.ff.FinalFrontier
+name: FinalFrontier
+author: Pet
+version: 1.0
+description: FinalFrontier
+commands:
+   ffa:
+     description: Main FinalFrontier admin command 
+     usage: /ffa
+   ff:
+     description: Main FinalFrontier user command 
+     usage: /ff
+   ffk:
+     description: Final Frontier kit command 
+     usage: /ffk

@@ -53,26 +53,15 @@ public class FinalFrontierKits implements CommandExecutor{
 			
 			else if (args.length == 1){
 				
-				if (args[0].equalsIgnoreCase("reset")){
-					try{
-						get.ffKits.set("Kits", null);
-						p.sendMessage("config reset");
-					}catch(Exception e){
-						
-					}
-				}
 
 				for (String s : get.ffKits.getConfigurationSection("Kits").getKeys(false)){
 					
-					if (args[0].equalsIgnoreCase(s)) {
-						if (p.hasPermission(get.ffKits.getString("Kits." + args[0] + ".perm"))) {
-							
-							try {
+					if (args[0].equalsIgnoreCase(s)){
+					try{
 					
 					String getKits = get.ffKits.getString("Kits." + args[0] + ".items");
 					String[] kits = getKits.split(",");
 					String[] enchants = get.ffKits.getString("Kits." + args[0] + ".enchants").split(",");
-					String[] nameMeta = get.ffKits.getString("Kits." + args[0] + ".names").split(",");
 					
 					for (int i = 0; i < kits.length; i++){
 						
@@ -83,9 +72,6 @@ public class FinalFrontierKits implements CommandExecutor{
 						ItemMeta kitMeta = kit.getItemMeta();
 						
 						kitMeta.addEnchant(Enchantment.getById(Integer.valueOf(singleEnchant[0])), Integer.valueOf(singleEnchant[1]), false);
-						if (!nameMeta[i].equals("default")){
-							kitMeta.setDisplayName(nameMeta[i]);
-						}
 						kit.setItemMeta(kitMeta);
 						
 						p.getInventory().addItem(kit);
@@ -93,12 +79,8 @@ public class FinalFrontierKits implements CommandExecutor{
 					}
 					}catch(Exception e){
 						e.printStackTrace();
-						
-						
-							}
-						}else{
-							p.sendMessage(get.ffMsg + "You can't always get what you want, buddy! Don't worry man, I know the feels ;(");
-						}
+					}
+				
 					}
 					
 				}

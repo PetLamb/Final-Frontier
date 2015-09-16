@@ -3,6 +3,7 @@ package me.mortadelle2.ff;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +17,8 @@ public class FinalFrontierUserCmds implements CommandExecutor{
 
 
 	FinalFrontier get;
+	
+	FinalFrontierAdminCmds adminGet = new FinalFrontierAdminCmds(get);
 	
 	public FinalFrontierUserCmds(FinalFrontier finalFrontier) {
 		get = finalFrontier;
@@ -38,6 +41,7 @@ public class FinalFrontierUserCmds implements CommandExecutor{
 			if (args.length == 2){
 				
 				if (args[0].equalsIgnoreCase("join")){
+				  if (get.settingsFile.contains("Maps." + args[1])){
 					if (args[1] != null && get.settingsFile.getString("Maps." + args[1] + ".defenseLoc.x") != null
 							&& get.settingsFile.getString("Maps." + args[1] + ".attackLoc.x") != null){
 						
@@ -58,10 +62,15 @@ public class FinalFrontierUserCmds implements CommandExecutor{
 							p.sendMessage(get.ffMsg + ChatColor.RED + "That map doesn't exist! You typed /ff join " + args[1] + "!");
 							return true;
 						}
-					}else{
+					}
+					else{
 						p.sendMessage(get.ffMsg + ChatColor.RED + "The spawn locations for both teams have not been set! Please contact a member of staff!");
 						return true;
 					}
+				  }else{
+					  p.sendMessage(get.ffMsg + ChatColor.RED + "Map not found!");
+					  return true;
+				  }
 				}
 				
 			}
@@ -78,7 +87,7 @@ public class FinalFrontierUserCmds implements CommandExecutor{
                     int warpZ = get.settingsFile.getInt("Maps." + currentMap.get(p.getName()) + ".attackLoc.z");
                     
                     p.teleport(new Location(Bukkit.getServer().getWorld(get.settingsFile.getString("Maps." + currentMap.get(p.getName()) + ".world")), warpX, warpY, warpZ));	
-					
+                    
 					get.attackingPlayers.add(p.getName());
 					p.sendMessage(get.ffMsg + "You are now attacking! Better watch out, eh?");
 					return true;
@@ -99,7 +108,6 @@ public class FinalFrontierUserCmds implements CommandExecutor{
                     int warpZ = get.settingsFile.getInt("Maps." + currentMap.get(p.getName()) + ".defenseLoc.z");
                     get.defendingPlayers.add(p.getName());
                     
-                    get.settingsFile.set("Maps." + currentMap.get(p.getName()) + ".defenseChat." + p.getName() + ",", "");
                     
                     p.teleport(new Location(Bukkit.getServer().getWorld(get.settingsFile.getString("Maps." + currentMap.get(p.getName()) + ".world")), warpX, warpY, warpZ));				
 					p.sendMessage(get.ffMsg + "You are now defending! Good luck to you sir!");

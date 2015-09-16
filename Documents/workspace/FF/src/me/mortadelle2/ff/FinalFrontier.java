@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,12 +34,15 @@ public class FinalFrontier extends JavaPlugin{
 	public FileConfiguration pData = YamlConfiguration.loadConfiguration(playerData);
 	private File kits = new File(getDataFolder() + "/Data/kits.yml");
 	public FileConfiguration ffKits = YamlConfiguration.loadConfiguration(kits);
+	private File mSettings = new File(getDataFolder() + "/Data/MapSettings.yml");
+	public FileConfiguration mapSettings = YamlConfiguration.loadConfiguration(mSettings);
 	
 	//Files that must not be touched by user
 	private File config = new File(getDataFolder() + "/DO NOT TOUCH/settings.yml");
 	public FileConfiguration settingsFile = YamlConfiguration.loadConfiguration(config);
 	private File playerSettings = new File(getDataFolder() + "/DO NOT TOUCH/playerSettings");
 	public FileConfiguration pSettings = YamlConfiguration.loadConfiguration(playerSettings);
+	
 
 	public void loadPlayers(){
 		ffU = new FinalFrontierUserCmds(this);
@@ -64,9 +68,9 @@ public class FinalFrontier extends JavaPlugin{
 		if (!ffKits.contains("Kits.archer")){
 			ffKits.set("Kits.archer.items", "300-1,301-1");
 			ffKits.set("Kits.archer.enchants", "34:2,34:1");
-			ffKits.set("Kits.archer.names", "Final Frontier Archer Leggings,default");
+			ffKits.set("Kits.archer.names", "Final Frontier Archer Leggings,Final Frontier Archer Boots");
 			
-			ffKits.set("Kits.archer.perm" , "ffKits.archer");
+			ffKits.set("Kits.archer.perm" , "ffKits.mage");
 			try {
 				ffKits.save(kits);
 			} catch (IOException e) {
@@ -78,6 +82,8 @@ public class FinalFrontier extends JavaPlugin{
 	public void laodConfig(){
 		settingsFile.addDefault("Maps", "");
 		settingsFile.options().copyDefaults(true);
+		mapSettings.addDefault("Maps", "");
+		mapSettings.options().copyDefaults(true);
 	}
 	
 	public void loadFiles(){
@@ -87,6 +93,7 @@ public class FinalFrontier extends JavaPlugin{
 					pSettings.load(playerSettings);
 					ffKits.load(kits);
 					pData.load(playerData);
+					mapSettings.load(mSettings);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -100,7 +107,7 @@ public class FinalFrontier extends JavaPlugin{
 				settingsFile.save(config);
 				pSettings.save(playerSettings);
 				ffKits.save(kits);
-				ffKits.save(kits);
+				mapSettings.save(mSettings);
 				loadPlayers();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -114,6 +121,7 @@ public class FinalFrontier extends JavaPlugin{
 			pSettings.save(playerSettings);
 			pData.save(playerData);
 			ffKits.save(kits);
+			mapSettings.save(mSettings);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -134,8 +142,9 @@ public class FinalFrontier extends JavaPlugin{
 		System.out.println(getDataFolder());
 		
 		new FinalFrontierAdminCmds(this);
-		new FinalFrontierEvents(this);
+		new FinalFrontierEvents(this, new FinalFrontierUserCmds(this), new FinalFrontierAdminCmds(this));
 		new FinalFrontierKits(this);
+		new GameEnds(this);
 		
 		//Registering commands from other classes
 		this.getCommand("ffa").setExecutor(new FinalFrontierAdminCmds(this));

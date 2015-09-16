@@ -14,8 +14,10 @@ public class FinalFrontierAdminCmds implements CommandExecutor{
 	FinalFrontier get;
 	
 	ArrayList<String> waitingForReset = new ArrayList<String>();
+	ArrayList<String> waitingForCorePlacement = new ArrayList<String>();
 	
 	int confirmReset;
+	int cancelCorePlacement;
 	
 	public FinalFrontierAdminCmds(FinalFrontier finalFrontier) {
 		get = finalFrontier;
@@ -93,7 +95,11 @@ public class FinalFrontierAdminCmds implements CommandExecutor{
 						get.settingsFile.set("Maps." + args[1] + ".attackLoc.z", null);
 		                get.settingsFile.set("Maps." + args[1] + ".defenseChat", "");
 		                get.settingsFile.set("Maps." + args[1] + ".attackChat", "");
-						
+		                get.settingsFile.set("Maps." + args[1] + ".objectifBlockLoc", "");
+		                get.settingsFile.set("Maps." + args[1] + ".objectifBlockLoc.x", "");
+		                get.settingsFile.set("Maps." + args[1] + ".objectifBlockLoc.y", "");
+		                get.settingsFile.set("Maps." + args[1] + ".objectifBlockLoc.z", "");
+		                
 						p.sendMessage(get.ffMsg + "You have succesfully created map " + ChatColor.GREEN + args[1] + ChatColor.YELLOW + "!");
 						return true;
 						
@@ -117,7 +123,34 @@ public class FinalFrontierAdminCmds implements CommandExecutor{
 						}
 						
 					}
-				}else{
+				}
+				
+				else if (args[0].equalsIgnoreCase("obj")){
+					if (args[1] != null && get.settingsFile.contains("Maps." + args[1])){
+						
+						p.sendMessage(get.ffMsg + "Click on any block and that will become the defenders' castle core!");
+						
+						waitingForCorePlacement.add(p.getName());
+						
+						cancelCorePlacement = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(get, new Runnable() {
+							
+							@Override
+							public void run() {
+
+								p.sendMessage(get.ffMsg + ChatColor.GREEN + "Core " + ChatColor.YELLOW + "placement cancelled!");
+										
+								waitingForCorePlacement.remove(p.getName());
+		
+							}
+						}, 300L);
+						
+						
+					}else{
+						p.sendMessage(get.ffMsg + ChatColor.RED + "Not found!");
+					}
+				}
+				
+				else{
 					p.sendMessage(get.ffMsg + ChatColor.RED + "That Final Frontier command doesn't exist!");
 					return true;
 				}
@@ -146,9 +179,6 @@ public class FinalFrontierAdminCmds implements CommandExecutor{
 							return  true;
 						}
 					}
-				}else{
-					p.sendMessage(get.ffMsg + ChatColor.RED + "That Final Frontier command doesn't exist!");
-					return true;
 				}
 		
 			
