@@ -1,7 +1,6 @@
 package me.mortadelle2.ff;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
