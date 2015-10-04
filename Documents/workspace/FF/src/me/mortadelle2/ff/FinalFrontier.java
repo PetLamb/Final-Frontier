@@ -4,14 +4,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class FinalFrontier extends JavaPlugin{
@@ -21,6 +24,14 @@ public class FinalFrontier extends JavaPlugin{
 	FinalFrontierUserCmds ffU;
 	FinalFrontierKits ffK;
 	
+	int cancelCorePlacement;
+	
+    HashMap<String, List<ItemStack>> previousInv = new HashMap<String, List<ItemStack>>();
+    HashMap<String, List<ItemStack>> previousArmour = new HashMap<String, List<ItemStack>>();
+	HashMap<String, Location> previousLocation = new HashMap<String, Location>();
+	HashMap<String, String> currentMap = new HashMap<String, String>();
+	
+    
 	File f;
 	
 	String ffMsg = ChatColor.GREEN + "[" + ChatColor.YELLOW + "Final Frontier" + ChatColor.GREEN + "]" + ChatColor.YELLOW + ": ";
@@ -28,6 +39,15 @@ public class FinalFrontier extends JavaPlugin{
 	ArrayList<String> attackingPlayers = new ArrayList<String>();
 	ArrayList<String> defendingPlayers = new ArrayList<String>();
 	
+	ArrayList<String> waitingForCorePlacement = new ArrayList<String>();
+	
+	HashMap<String, List<String>> attackersOnMap = new HashMap<String, List<String>>();
+	HashMap<String, List<String>> defendersOnMap = new HashMap<String, List<String>>();
+	
+	HashMap<String, ArrayList<String>> mapChats = new HashMap<String, ArrayList<String>>();
+	ArrayList<String> globalChat = new ArrayList<String>();
+	
+	HashMap<String, Integer> lives = new HashMap<String, Integer>();
 	
 	//Files that may be touched by user
 	private File playerData = new File(getDataFolder() + "/Data/PlayerInfo.yml");
@@ -53,7 +73,7 @@ public class FinalFrontier extends JavaPlugin{
 				try {
 					pData.save(playerData);
 				} catch (IOException e) {
-					e.printStackTrace();
+					e.printStackTrace(); 
 				}
 			}
 			pSettings.set(p.getName() + ".hasJoined", false);
